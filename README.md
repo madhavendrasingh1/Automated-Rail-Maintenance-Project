@@ -1,45 +1,39 @@
-# 🚆 Hybrid Anomaly Detection Framework for Railway Track Monitoring
+# 🚆 Automated Rail Maintenance Project
 
-This repository implements a **hybrid anomaly detection framework** that fuses multi-sensor data to detect anomalies on railway tracks. It integrates **temporal and spatial synchronization**, **sensor-specific models**, and **Bayesian fusion techniques**.
-
----
-
-## 📌 Overview
-
-Different types of sensors collect data at varying sampling rates and positions:
-
-| Sensor Type           | Sampling Rate       |
-|------------------------|---------------------|
-| Fiber Optic Strain     | 1000 Hz             |
-| Ultrasonic (ToF)       | 1 Hz                |
-| Vibration Accelerometer| 5000 Hz             |
-| Temperature            | Every 10 seconds    |
-| Humidity               | Every 60 seconds    |
-
-This framework synchronizes all data into unified temporal-spatial windows for efficient anomaly detection.
+A hybrid anomaly detection framework for **structural health monitoring** of railway tracks using **multi-sensor fusion**. This project focuses on real-time detection of track defects by integrating data from various sensors using temporal and spatial models.
 
 ---
 
-## 🧱 System Architecture
+## 📌 Project Highlights
 
-### **Step 1: Input Layer — Raw Sensor Data Acquisition**
-
-Collect raw time-series sensor data with corresponding positions.
+- **Sensors Used**: Fiber Optic, Vibration, Ultrasonic, Temperature, Humidity  
+- **Approach**: Hybrid deep learning (LSTM + CNN)  
+- **Fusion Strategy**: Sensor-level and cross-sensor fusion  
+- **Goal**: Identify anomalies like cracks, corrosion, voids, and weld failures to enable predictive maintenance
 
 ---
 
-### **Step 2: Synchronization Layer**
+## 🧠 Working Methodology
 
-#### ✅ Temporal Synchronization
+### 1. Sensor Data Acquisition
+Data is collected from 5 types of sensors:
+- 💡 Fiber Optic
+- 📉 Vibration
+- 📡 Ultrasonic
+- 🌡️ Temperature
+- 💧 Humidity
 
-- Convert raw streams into fixed time windows (e.g., every 10 seconds).
-- Use aggregation functions like `mean`, `min`, `max`, `median`, and `mode`.
+### 2. Data Synchronization
+- **Temporal Alignment**: Resample all sensor data to a common time window (e.g., every 10 seconds).
+- **Spatial Alignment**: Bin the railway track into 100-meter segments using chainage or GPS+ICP for spatial consistency.
 
-Example in Python:
+### 3. Feature Extraction & Modeling
+- **Temporal Modeling**: LSTM or GRU networks extract sequential features.
+- **Spatial Modeling**: 1D CNNs are applied to localized (segment-wise) data.
+- **Model Training**: Each sensor's data is processed and modeled independently before fusion.
 
-```python
-fiber_df = fiber_df.resample('10s').agg(['mean', 'median', 'min', 'max'])
-vibration_df = vibration_df.resample('10s').agg(['mean'])
-ultrasonic_df = ultrasonic_df.resample('10s').mean()
-temp_df = temp_df.resample('10s').mean()
-humidity_df = humidity_df.resample('10s').mean()
+### 4. Anomaly Scoring & Fusion
+- **Per Sensor Fusion**: Temporal + spatial scores fused using Bayesian inference.
+- **Cross-Sensor Fusion**: Final anomaly score computed using ensemble techniques (e.g., weighted voting, stacking).
+
+---
